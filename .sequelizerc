@@ -1,0 +1,15 @@
+const path = require("path");
+
+module.exports = {
+  config: "./db/config.js", //En donde va a encontrar la configuracion
+  "models-path": "./db/models/", // En donde va a encontrar los modelos
+  "migrations-path": "./db/migrations/", // En donde va a encontrar las migracions
+  "seeders-path": "./db/seeders/", // En donde va a encontrar las seeds
+};
+
+// module.exports = {
+//   config: path.resolve("db", "config.js"), //En donde va a encontrar la configuracion
+//   "models-path": path.resolve("db", "models"), // En donde va a encontrar los modelos
+//   "migrations-path": path.resolve("db", "migrations"), // En donde va a encontrar las migracions
+//   "seeders-path": path.resolve("db", "seeders"), // En donde va a encontrar las seeds
+// };

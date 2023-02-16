@@ -1,0 +1,59 @@
+version: "3.3"
+
+services:
+  postgres: # <--- Nombre del servicio
+    image: postgres:13 # resource_name : version
+    environment:
+      - POSTGRES_DB:${DB_NAME}
+      - POSTGRES_USER:${DB_USER}
+      - POSTGRES_PASSWORD:${DB_PASSWORD}
+      # - POSTGRES_DB=my_store
+      # - POSTGRES_USER=andrew
+      # - POSTGRES_PASSWORD=admin123
+    ports: #Puerto en el que va a correr
+      - 5432:5432
+    volumes:
+      - "./postgres_data:/var/lib/postgresql/data"
+      # donde se va a guardar la info : la ruta de la BD (varia dependiendo de la DB)
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PG_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PG_PASSWORD}
+      #- PGADMIN_DEFAULT_EMAIL=admin@mail.com
+      #- PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+      - 5050:80
+  mysql:
+    image: mysql:5
+    environment:
+      - MYSQL_DATABASE=my_store
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=toor
+      - MYSQL_PORT=3444
+    ports:
+      - 3307:3444
+    volumes:
+      - "./mysql_data:/var/lib/mysql"
+  phpmyadmin:
+    image: phpmyadmin
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin123
+      - PMA_HOST=mysql
+    ports:
+      - 8080:80
+# Como lanzar el contenedor
+# 1. docker-compose up (inicia) -d (que ejecute en segundo plano) postgres (nombre del servicio)
+#    docker compose --env-file [.env file_name ] up  <---- Comando ejecución para archivos .env
+# 2. Para revisar los servicios activos, usar -->  docker-compose ps
+# 3. docker-compose down (si no se especifica el servicio, baja todos)
+
+# Como los contenedores son stateless, significa que no tienen estado. Sin embargo, si este contener se baja, los datos tambien se borrarian, por lo que en este caso necesitamos que la base de datos guarde y perdure la data, tenemos que crear un "Volumen" al que va a conectarse para guardar info.
+
+# Para ver la base de datos en la terminal hay que seguir los sig pasos:
+# docker-compose exec postgres bash (si la base de datos ya está corriendo) ó  docker-compose run postgres bash (Si la db no está corriendo)
+# psql -h localhost -d {DB_NAME} -U {DB_USER}   ----> psql hace la conexion con postgres
+# Dentro de la DB, ejecutamos : \d+ para ver la estructura, \q para salirse de la DB, y exit para salirse de todo
+
+#Para hacer consultas en bash, hay que poner lo siguiente:
+#    {QUERY};   ---->  SELECT * FROM tasks;
